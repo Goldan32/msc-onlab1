@@ -1,0 +1,23 @@
+\newcommand{\cnn}{konvolúciós neurális hálózat}
+
+\chapter{Konvolúciós Neurális Hálózatok}
+Ebben a fejezetben bemutatom a \cnn ok (CNN) felépítését, használatát és néhány nevezetes modellt. A \cnn okat a legtöbb esetben képfeldolgozás terén használják. A projekt során is képfeldolgozást kell megvalósítani, így ezek ismerete elengedhetetlen.
+
+\section{Szerkezet}
+Egy alapvető \cnn nak három alkotóeleme van. Először a képen a konvolúciós rétegek 2D konvolúciót végeznek. Ezt a műveletet többször is elvégzi a hálózatok, a következő konvolúció bemenete mindig az előző kimenete lesz. Néhány konvolúció után a pooling következik. Ez a két művelet ismétlődhet többször is akár. Ezek után a teljesen összekötött réteg következik, ami a kimenetet állítja elő. Az itt bemutatott általános \cnn osztályozó funkciót tud leghatékonyabban megvalósítani.
+
+\subsection{Konvolúciós réteg}
+Ebben a rétegben kétdimenziós konvolúciót végzünk a feldolgozandó képen. Ennek során először választunk egy kernelt. A kernel négyzetes mátrix, a képnél általában jóval kisebb mérettel. Gyakori kernelméret például a 3x3-as, vagy 5x5-ös mátrix. Alapvetően a kernel végighalad minden képkockán, és a középső pixelnek ad egy új értéket a kernel és a pixelek értékei alapján.
+
+% Insert conv.drawio.pdf here
+
+Vegyük például a következő 3x3-as kernelt és egy kép 5x5-ös részletét. Az ábrán bal oldalt található a kernel, középen a bemeneti kép, jobb oldalon pedig a kimeneti kép. A képnek a zölddel jelölt részét tudjuk csak leképezni anélkül, hogy a kernel kimutatna a képen kívülre. Ezen a területen a kernel közepét a egy számmal helyettesítjük. Ezt a számot úgy képezzük, hogy a kernel értékeit megszorozzuk az fedésben lévő pixellel, majd ezeket az értékeket összeadjuk. Az új képen a kernel közepét ezzel az értékkel helyettesítjük. Ezután eggyel jobbra toljuk a kernelt, a sorvéget elérve pedig a következő sor elejére helyezzük.
+
+Sok esetben szeretnénk csökkenteni a képek méretér a konvolúció során, hogy gyorsítsuk a hálózatot. Ehhez a konvolúció stride paraméterét kell növelnünk. A stride alapesetben 1, és azt jelzi, hogy a művelet elvégzése után mennyivel toljuk arrébb a kernelt. Könnyen belátható, hogy minél nagyobb a stride, annál kevesebb lesz a kimeneti pixelek száma, így csökken a kép mérete.
+
+Jellemzően több konvolúció történik egymás után. Az első ilyen réteg feladata az alacsony szintű elemek megtalálása, például élek vagy színváltások megkeresése. Ahogy egyre több konvolúció történik egymás után, a hálózat egyre magasabb szintű jellegzetességeket fog tudni felismerni. Így már ebben a fázisban is az emberi megértéshez hasonlóan dolgozza fel a képeket a neurális hálózat.
+\cite{ConvNetExplain}
+
+\subsection{Pooling réteg}
+
+\subsection{Teljesen összekötött réteg réteg}
