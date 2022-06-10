@@ -5,6 +5,7 @@ Ebben a fejezetben bemutatom a \cnn ok (CNN) felépítését, használatát és 
 
 \section{Szerkezet}
 Egy alapvető \cnn nak három alkotóeleme van. Először a képen a konvolúciós rétegek 2D konvolúciót végeznek. Ezt a műveletet többször is elvégzi a hálózatok, a következő konvolúció bemenete mindig az előző kimenete lesz. Néhány konvolúció után a pooling következik. Ez a két művelet ismétlődhet többször is akár. Ezek után a teljesen összekötött réteg következik, ami a kimenetet állítja elő. Az itt bemutatott általános \cnn osztályozó funkciót tud leghatékonyabban megvalósítani.
+% insert cnn.jpg and \cite{ConvNetExplain}
 
 \subsection{Konvolúciós réteg}
 Ebben a rétegben kétdimenziós konvolúciót végzünk a feldolgozandó képen. Ennek során először választunk egy kernelt. A kernel négyzetes mátrix, a képnél általában jóval kisebb mérettel. Gyakori kernelméret például a 3x3-as, vagy 5x5-ös mátrix. Alapvetően a kernel végighalad minden képkockán, és a középső pixelnek ad egy új értéket a kernel és a pixelek értékei alapján.
@@ -19,5 +20,25 @@ Jellemzően több konvolúció történik egymás után. Az első ilyen réteg f
 \cite{ConvNetExplain}
 
 \subsection{Pooling réteg}
+A pooling rétegek feladata a bemenetük méretbeli csökkentése. Nagyon hasonlóan működnek a konvolúciós rétegekhez, a pooling rétegekben is egy kernel iterál végig a képen. Jellemzően egynél nagyobb stride értékkel.
 
-\subsection{Teljesen összekötött réteg réteg}
+A különbség a kernel értékeiben mutatkozik leginkább. Kétféle pooling-ot fordul elő gyakran. Átlag pooling esetében a kernelt az általa fedett pixelek átlagával helyettesítjük, maximum pooling esetében pedig a fedett pixelek közül a legnagyobbal. A maximum pooling a leggyakrabban használt a kettő variáció közül.
+
+A pooling lényege tulajdonképpen a képen található domináns sajátosságok kinyerése. Ezekről a részekről forgatásra és pozícióra nézve invariáns információt tárol el a hálózat.\cite{ConvNetExplain}
+
+\subsection{Teljesen összekötött réteg}
+A teljesen összekötött réteg bármilyen neurális hálózat alapvető építőeleme. Ha a művelet kimenete nem egy másik kép, hanem valamilyen szöveges információ, például a képen látható objektum klasszifikációja, akkor a teljesen összekötött réteg végzi el az osztályba sorolás műveletét.
+
+% insert fcl.png with citation https://www.oreilly.com/library/view/tensorflow-for-deep/9781491980446/ch04.html
+
+Ebben a rétegben két csoportba rendezve láthatunk neuronokat. A csoportok minden tagja össze van kötve a másik csoport összes tagjával és az összeköttetéseken súlyokat találunk. A képen a súlyokkal a vonalak vastagsága arányos. A jobb oldali csoport összes neuronja összegzi a bele futó élek végén található neuronok kimeneteit az éleken található értékekkel súlyozva, és az összeg lesz ennek a neuronnak a kimenete.
+
+Ilyen rétegből is jellemzően több helyezkedik el egymás után. A legutolsó réteg a kimeneti réteg. Osztályozás esetén annyi kimeneti neuron van, ahány lehetséges osztály közül kell választani. Amelyik kimeneti neuronnak a legnagyobb az értéke, az ahhoz tartozó osztályba fogja sorolni a hálózat a bemeneti képet.
+
+Felmerülhet kérdésként, hogy hogyan jutunk el egy képtől neuronokig. A kép a konvolúciós és pooling rétegekben folyamatosan egyre kisebb lesz méreteit tekintve. Egy ponton már olyan kicsi, hogy minden egyes pixelét tekinthetjük egy neuronnak, és felfoghatjuk a legelső teljesen összekötött réteg bemeneteként. A teljesen összekötött rétegek is jellemzően egymás után egyre kevesebb neuront tartalmaznak.
+
+\section{Nevezetes neurális hálózat modellek}
+
+% Szóveg, hogy a xilinx ad előre tanított hálókat
+
+% válassz három szimpatikus hálőzatot
