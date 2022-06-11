@@ -37,8 +37,22 @@ Ilyen rétegből is jellemzően több helyezkedik el egymás után. A legutolsó
 
 Felmerülhet kérdésként, hogy hogyan jutunk el egy képtől neuronokig. A kép a konvolúciós és pooling rétegekben folyamatosan egyre kisebb lesz méreteit tekintve. Egy ponton már olyan kicsi, hogy minden egyes pixelét tekinthetjük egy neuronnak, és felfoghatjuk a legelső teljesen összekötött réteg bemeneteként. A teljesen összekötött rétegek is jellemzően egymás után egyre kevesebb neuront tartalmaznak.
 
-\section{Nevezetes neurális hálózat modellek}
+\section{Előre tanított neurális hálózat modellek}
 
 % Szóveg, hogy a xilinx ad előre tanított hálókat
+A neurális hálózatok felhasználásának két lépése van. Először mintaadatok segítségével tanítani kell a hálózatot, ezután lehet csak kiértékelésre használni. A jelenlegi feladatnak csak a kiértékelés része az érdekes, ezt tudjuk ugyanis hatékonyan elvégezni a célhardveren.
 
-% válassz három szimpatikus hálőzatot
+Tanítás nélkül is van lehetőségünk neurális hálózatok felhasználására. Ebben az esetben ugyan nem tudjuk meghatározni, hogy milyen feladatot végez el a hálózat, azonban sok gyakori felhasználásra már rendelkezésre áll erősen optimalizált és teljesen tanított hálózat. Ezeket az előre tanított hálózatokat sok esetben van lehetőségünk áttanítani valamilyen másik, hasonló célra, azonban ebben a feladatban ilyen áttanítás nem lesz szükséges.
+
+A Xilinx eszközök már sok esetben alkalmasak neurális hálózatok kiértékelésére. A cég mindenki számára elérhetővé tesz bizonyos neurális hálózat modelleket, amik olyan formátumban vannak, amiket Xilinx eszközön módosítás nélkül fel lehet használni kiértékelésre.
+\cite{ModelZoo}
+
+\subsection{Resnet50}
+A modell teljes neve: \mycode{cf\_resnet50\_imagenet\_224\_224\_7.7G\_2.0}. A név a következő információkat tartalmazza: A modell caffe keretrendszerben volt tanítva az imagenet adathalmazon, resnet50 architektúrájú, és 224x224 pixel méretű képeken tud dolgozni. Ez a hálózat a bemenetére adott képet osztályozni tudja 10 lehetséges csoport közül egybe.
+
+A feladatom első részében ezt a modellt használtam a rendszer tesztelésére, a pontos folyamatot a későbbiekben fogom bemutatni.
+
+\subsection{Facerec}
+A feladat további részeiben arcfelismerést és bounding box rajzolást kell majd elvégezni. A Model Zoo-t végignézve több lehetőség is adódik, ezek közül részletesebb tesztelés után fogok konkrét modellt választani. Mindegyikre igaz azonban, hogy a facerec arcfelismerő architektúrát valósítják meg. A különbség a bemeneti kép méretében, a tanító keretrendszerben és a tanításra felhasznált adathalmazban van.
+
+
