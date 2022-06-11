@@ -1,0 +1,13 @@
+\chapter{Xilinx ZCU106}
+A feladat megoldására a Xilinx ZCU106 tesztkártyát használtam.\cite{ZCU106}
+
+\section{Zynq UltraScale+ MPSoC}
+A kártya központi egysége egy SoC (System on a Chip). Az SoC két részre osztható.
+
+A PL (Programmable Logic) részben, egy FPGA-hoz hasonlóan szabadon lehet hardvert kialakítani valamilyen hardverleíró nyelv segítségével. Ugyanakkor gyakori felhasználása a PL-nak, hogy nem írjuk meg kézzel a hardvert, hanem rendelkezésre álló IP (Intellectual Property) core-okat használunk fel. Az ilyen core-ok általában szoftverrel összhangban, az aktuális program valamilyen lépését képesek hardveresen gyorsítani. Elképzelhető még valamilyen interface, például HDMI interface kialakítása is. Ebben a feladatban leginkább a hardveres gyorsítás van a középpontban.
+
+A PS (Processing System) részben általában leginkább CPU (Central Processing Unit) core-okat találunk. Ebben az SoC-ben található egy négymagos Arm Cortex-A53 processzor, és egy kétmagos Arm Cortex-R5 processzor. Előbbi az általános alkalmazások futtatására alkalmas, míg utóbbi képes valós idejű működésre is. A PS-t lehet használni bare metal alkalmazások futtatására, ebben az esetben a lefordított bináris alkalmazást közvetlenül a CPU-n futtatjuk. Lehetőség van azonban operációs rendszert futtatni a PS-en. Ebben a feladatban is ilyen megoldást választottam. Az operációs rendszer neve Petalinux, és egy későbbi fejezetben kerül majd bemutatásra.
+
+A PS része még egy Arm MALI 400 MP2-es GPU is. A GPU feladata nem a hardveres gyorsítás, erre a célra a PL-ot kell felhasználni. A GPU segítségével lehetőség van videók dekódolására és enkódolására, valamint minimális grafikus megjelenítésre is.
+
+\section{Perifériák és interface-ek}
