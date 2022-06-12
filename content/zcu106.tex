@@ -11,3 +11,24 @@ A PS (Processing System) részben általában leginkább CPU (Central Processing
 A PS része még egy Arm MALI 400 MP2-es GPU is. A GPU feladata nem a hardveres gyorsítás, erre a célra a PL-ot kell felhasználni. A GPU segítségével lehetőség van videók dekódolására és enkódolására, valamint minimális grafikus megjelenítésre is.
 
 \section{Perifériák és interface-ek}
+A ZCU106 kártya számos perifériát tartalmaz, hogy az SoC-t a lehető legtöbb felhasználás esetében lehessen kipróbálni vagy tesztelni. Ezek közül a feladat szempontjából legfontosabbak fogom bemutatni.
+
+\subsection{Memóriák}
+A kártya rendelkezik két egységnyi DDR4 RAM memóriával is. Az egyik egy standard SoDIMM memória, amit a PS tud használni csakúgy mint egy normális számítógép. A másik egységen a memória chipek már nem rendelkeznek egy hordozó PCB-vel, hanem közvetlenül a kártyán helyezkednek el. Ezeket a memóriákat a PL-ból tudjuk elérni megfelelő hardver szintetizálásával.
+
+\subsection{Nagysebességű interface-ek}
+A kártyán jelen van szinte minden gyakran használt nagysebességű interface. Például rendelkezik egy 4 sávos 4. generációs PCIe csatlakozóval, RJ45 Ethernet csatlakozóval, valamint videó jeleknél használatos portokkal: egy HDMI és egy DisplayPort In/Out csatlakozóval.
+
+A felsoroltak közül a feladat során fel lehet majd használni a DisplayPort csatlakozót, ezen keresztül is tudunk majd videó jelet küldeni az SoC-nak. Ezen kívül használni kell az Ethernet csatlakozót is, mivel a tesztelés során a kártyát távolról kell konfigurálni és az elérés Etherneten keresztül lehetséges.
+
+\subsection{USB csatlakozók}
+A kártyán található egy standard USB csatlakozó. A végső megoldás során valószínűleg a DisplayPort-os kamera helyett inkább egy USB interface-szel rendelkező kamera kerül majd felhasználásra.
+
+A kártyán található egy micro-USB csatlakozó amit UART kapcsolat megvalósítására lehet felhasználni. A feladat során ennek is elkerülhetetlen a használata, hiszen ezen keresztül érjük majd el PS-en futó operációs rendszer CLI-ét (Command Line Interface).
+
+\section{IP core-ok}
+Az IP core-ok kicsit kilógnak a sorból, hiszen nincsenek rajta fizikailag a kártyán, viszont valamilyen módon mégis kapcsolódnak hozzá. Az IP core-okat a Xilinx szolgáltatja a tesztkártyákhoz, és ezek használata sokszor függ attól, hogy milyen módon vagy célra vásároltunk, és hogy milyen tesztkártyát.
+
+A feladatban két lényeges IP core-t kell felhasználni. Az egyik a DPU (Deep Processing Unit), amit már az eddig elkészült tesztek során is fel tudtam használni. Ennek feladata, ahogy az a nevéből is látszódik, a mély neurális hálózatok, pontosabban ezek kiértékelésének hardveres gyorsítása.
+
+A másik IP core felhasználása a tárgy második felében fog megvalósulni, ez a Multiscaler IP core lesz. Ennek feladata képek átméretezése.
