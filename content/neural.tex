@@ -5,12 +5,21 @@ Ebben a fejezetben bemutatom a \cnn ok (CNN) felépítését, használatát és 
 
 \section{Szerkezet}
 Egy alapvető \cnn nak három alkotóeleme van. Először a képen a konvolúciós rétegek 2D konvolúciót végeznek. Ezt a műveletet többször is elvégzi a hálózatok, a következő konvolúció bemenete mindig az előző kimenete lesz. Néhány konvolúció után a pooling következik. Ez a két művelet ismétlődhet többször is akár. Ezek után a teljesen összekötött réteg következik, ami a kimenetet állítja elő. Az itt bemutatott általános \cnn osztályozó funkciót tud leghatékonyabban megvalósítani.
-% insert cnn.jpg and \cite{ConvNetExplain}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/cnn.jpeg}
+    \caption{Egy konvolúciós neurális hálózat \cite{nnpic}}
+\end{figure}
 
 \subsection{Konvolúciós réteg}
 Ebben a rétegben kétdimenziós konvolúciót végzünk a feldolgozandó képen. Ennek során először választunk egy kernelt. A kernel négyzetes mátrix, a képnél általában jóval kisebb mérettel. Gyakori kernelméret például a 3x3-as, vagy 5x5-ös mátrix. Alapvetően a kernel végighalad minden képkockán, és a középső pixelnek ad egy új értéket a kernel és a pixelek értékei alapján.
 
-% Insert conv.drawio.pdf here
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{drawings/conv.drawio.pdf}
+    \caption{2D konvolúció}
+\end{figure}
 
 Vegyük például a következő 3x3-as kernelt és egy kép 5x5-ös részletét. Az ábrán bal oldalt található a kernel, középen a bemeneti kép, jobb oldalon pedig a kimeneti kép. A képnek a zölddel jelölt részét tudjuk csak leképezni anélkül, hogy a kernel kimutatna a képen kívülre. Ezen a területen a kernel közepét a egy számmal helyettesítjük. Ezt a számot úgy képezzük, hogy a kernel értékeit megszorozzuk az fedésben lévő pixellel, majd ezeket az értékeket összeadjuk. Az új képen a kernel közepét ezzel az értékkel helyettesítjük. Ezután eggyel jobbra toljuk a kernelt, a sorvéget elérve pedig a következő sor elejére helyezzük.
 
@@ -29,7 +38,11 @@ A pooling lényege tulajdonképpen a képen található domináns sajátosságok
 \subsection{Teljesen összekötött réteg}
 A teljesen összekötött réteg bármilyen neurális hálózat alapvető építőeleme. Ha a művelet kimenete nem egy másik kép, hanem valamilyen szöveges információ, például a képen látható objektum klasszifikációja, akkor a teljesen összekötött réteg végzi el az osztályba sorolás műveletét.
 
-% insert fcl.png with citation https://www.oreilly.com/library/view/tensorflow-for-deep/9781491980446/ch04.html
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=80mm, keepaspectratio]{figures/fcl.png}
+    \caption{Egy teljesen összekötött réteg \cite{ConvPic} }
+\end{figure}
 
 Ebben a rétegben két csoportba rendezve láthatunk neuronokat. A csoportok minden tagja össze van kötve a másik csoport összes tagjával és az összeköttetéseken súlyokat találunk. A képen a súlyokkal a vonalak vastagsága arányos. A jobb oldali csoport összes neuronja összegzi a bele futó élek végén található neuronok kimeneteit az éleken található értékekkel súlyozva, és az összeg lesz ennek a neuronnak a kimenete.
 
@@ -39,7 +52,6 @@ Felmerülhet kérdésként, hogy hogyan jutunk el egy képtől neuronokig. A ké
 
 \section{Előre tanított neurális hálózat modellek}
 
-% Szóveg, hogy a xilinx ad előre tanított hálókat
 A neurális hálózatok felhasználásának két lépése van. Először mintaadatok segítségével tanítani kell a hálózatot, ezután lehet csak kiértékelésre használni. A jelenlegi feladatnak csak a kiértékelés része az érdekes, ezt tudjuk ugyanis hatékonyan elvégezni a célhardveren.
 
 Tanítás nélkül is van lehetőségünk neurális hálózatok felhasználására. Ebben az esetben ugyan nem tudjuk meghatározni, hogy milyen feladatot végez el a hálózat, azonban sok gyakori felhasználásra már rendelkezésre áll erősen optimalizált és teljesen tanított hálózat. Ezeket az előre tanított hálózatokat sok esetben van lehetőségünk áttanítani valamilyen másik, hasonló célra, azonban ebben a feladatban ilyen áttanítás nem lesz szükséges.

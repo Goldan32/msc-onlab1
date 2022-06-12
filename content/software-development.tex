@@ -13,7 +13,12 @@ A base platformot a Xilinx Vivado fejlesztő környezet segítségével hoztam l
 A Vivado base platform talán legfontosabb része a Zynq UltraScale+ MPSoC blokk. Ezt a blokkot készen hozzá tudjuk adni a blokkvázlathoz az IP integrátor segítségével. Hozzáadás után a blokk alapértelmezett beállításokkal kerül hozzáadásra. Az alapértelmezett beállítások függenek a kártya típusától, ezt értelem szerűen a projekt kezdetén be kellett állítani. Az alapértelmezett paramétereket lehet szabadon módosítani, ez saját tervezésű PCB-k esetében lehet érdekes, itt nincs ilyen módosításokra szükség.
 
 Ez a blokk tartalmazza a PS konfigurációit és pin kiosztását. Ez a blokk szolgáltat információt arról, hogy hogyan tudjuk majd PL-ban megtervezett hardvert elérni a PS irányából.
-%insert block automation result png
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/block_automation_result.png}
+    \caption{Zynq UltraScale+ MPSoC blokk}
+\end{figure}
 
 \subsubsection{Órajelek}
 Órajelek előállítására rendelkezésre áll a Clocking Wizard nevű IP. Az IP blokk konfigurációja egyszerű, csak meg kell adni, hogy melyik órajelet milyen frekvencián szeretnénk, és az IP elrejti a hardver leírását.
@@ -31,6 +36,12 @@ Ennek a blokknak a konfigurálása során létrehozunk a PS irányából master-
 Szükség van másik irányú kapcsolatra is, tehát a PS-nek slave-ként is kell viselkednie. Ezeken az interface-eken a hardveres gyorsítók a PS-hez tartozó RAM-ot tudják majd elérni.
 
 \subsection{Exportálás}
-A base platform már tulajdonképpen készen van, azonban minden hardver design-hoz szükség van egy top modulra. Ezt jelen esetben HDL wrapper-nek hívják, és a Vivado automatikusan le tudja generálni.
+A base platform már tulajdonképpen készen van, azonban minden hardver design-hoz szükség van egy top modulra. Ezt jelen esetben HDL wrapper-nek hívják, és a Vivado automatikusan le tudja generálni.\\
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/base_platform.png}
+    \caption{A teljes Vivado base platform}
+\end{figure}
 
 A Generate Block Design fázis választása után lehet exportálni az elkészült pre-synthesis design-t az Export Platform opcióval. Az elkészült design-hoz lehetőség van bitstream-et is generálni, erre azonban a feladat során nincs szükség. Az elkészült .xsa fájlt a következő lépesek bemeneteként fogjuk felhasználni, és a PL konfigurációja a fejlesztés során egy későbbi lépésben fog elkészülni.
