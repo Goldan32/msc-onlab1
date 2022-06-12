@@ -2,6 +2,10 @@
 \chapter{\bevezetes}
 %----------------------------------------------------------------------------
 
-A bevezető tartalmazza a diplomaterv-kiírás elemzését, történelmi előzményeit, a feladat indokoltságát (a motiváció leírását), az eddigi megoldásokat, és ennek tükrében a hallgató megoldásának összefoglalását.
+Az mesterséges intelligencia és ezzel együtt a neurális hálózatok észrevehetően a mindennapjaink részét képezik. Azonban sokáig az ilyen algoritmusok felhasználásához nagy helyigényű hardverre volt szükség, így leginkább szervereken volt jellemző. Napjainkban viszont egyre elterjedtebbé válnak az Edge AI megoldások. Ezek esetében lokálisan történik meg a neurális hálózatok kiértékelése, nincs szükség arra, hogy az interneten keresztül elküldjük az adatokat egy szervernek, hogy ott történjen meg a feldolgozás.
 
-A bevezető szokás szerint a diplomaterv felépítésével záródik, azaz annak rövid leírásával, hogy melyik fejezet mivel foglalkozik.
+Az Edge AI térnyerését az egyre kisebb méretű és mégis egyre erősebb hardverek tették lehetővé. Azonban így is igen nagy számítási kapacitásra van szükség az algoritmusok futtatásához, és továbbra is valamilyen célhardver kell. A Xilinx cég kezdett el olyan irányba fejleszteni, hogy a már egyébként létező heterogén rendszerei alkalmasak legyenek Edge AI megoldások implementálására.
+
+A feladatom egy demo alkalmazás készítése a Xilinx ZCU106-os tesztkártyán, amely bemutatja a kártyán lévő heterogén rendszer neurális hálózatokat kiértékelő képességeit. A végső cél egy jellegzetes Edge AI alkalmazás, az élő videón arcfelismerés demo készítése. Köztes lépésként elkészítek egy olyan alkalmazást is, ami memóriában tárolt képet tud osztályozni.
+
+Ebben a dolgozatban először bemutatom a konvolúciós neurális hálózatokat, majd írok a fejlesztéshez használt tesztkártya tulajdonságairól. Ezután részletesen leírom a fejlesztési folyamat lépéseit és megindoklom ezek szükségességét. Mindeközben bemutatom, hogy milyen részeit vannak egy ilyen heterogén alkalmazásnak. Végül leírom, hogy a következőkben mivel fogom folytatni a feladatot.
