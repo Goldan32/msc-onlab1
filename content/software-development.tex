@@ -45,3 +45,33 @@ A base platform már tulajdonképpen készen van, azonban minden hardver design-
 \end{figure}
 
 A Generate Block Design fázis választása után lehet exportálni az elkészült pre-synthesis design-t az Export Platform opcióval. Az elkészült design-hoz lehetőség van bitstream-et is generálni, erre azonban a feladat során nincs szükség. Az elkészült .xsa fájlt a következő lépesek bemeneteként fogjuk felhasználni, és a PL konfigurációja a fejlesztés során egy későbbi lépésben fog elkészülni.
+
+\section{Software platform - Petalinux}
+Ebben a fejezetben a már említett Arm CPU magokon futó szoftver platform kerül bemutatásra. A Xilinx heterogén rendszerek PS részén futó operációs rendszer a Linux egy erre a célra kifejlesztett fork-ja, a Petalinux.
+
+\subsection{Alaptulajdonságok}
+A Petalinux egy hardver specifikus szoftver környezet. Ez alatt azt kell érteni, hogy az operációs rendszer összetétele, leginkább a device tree-hez kapcsolódó elemek, nagyban függ attól, hogy milyen hardvert szintetizálunk az SoC PL részébe. Ezért is szükséges minden projekt esetében új Petalinux készítése, hogy illeszkedni tudjon a PS a PL-hoz.
+
+A Petalinux fordításához rendelkezésre áll a Xilinx Petalinux SDK-je (Software Development Kit), ami a Yocto Project-et felhasználva tud operációs rendszert fordítani. A folyamat bemenete az előző részben tárgyalt .xsa kiterjesztésű fájl. Ezt felhasználva az SDK generál egy device tree-t, amiben fel vannak sorolva a rendelkezésre álló hardveres interface-ek.
+
+\subsection{Konfiguráció}
+Petalinux fordítás előtt be kell állítani, hogy milyen konfigurációval jöjjön létre az elkészülő operációs rendszer. A beállításokat egy  
+
+Ha hivatalos Xilinx tesztkártyát használunk akkor lehetőségünk van sok beállítás, köztük a device tree automatikus konfigurálására. Ehhez csupán választani kell a dokumentációban definiált kártyák közül, ebben a feladatban ez a név a \mycode{zcu106-reva} volt.\cite{plnx}
+
+Az operációs rendszert legfeltűnőbben saját felhasználói csomagok hozzáadásával lehet személyre szabni. Ilyen csomagok hozzáadásához a csomagok nevét ki kell bővíteni a \mycode{CONFIG\_} előtaggal, és ezt a kifejezést egy új sorban hozzá kell adni a \mycode{<your\_petalinux\_project\_dir>/project-spec/meta-user/conf/user-rootfsconfig} fájlhoz. Ebben a feladatban hozzáadtam a \mycode{dnf} csomagkezelő csomagot valamint a szoftverfejlesztéshez szükséges csomagokat. Ilyen például egy C fordító, amivel magán az SoC-n is lehet programot készíteni. Külön csomagként kell hozzáadni a Vitis AI programcsomagot, erre is szükség lesz a demo alkalmazás futtatásánál. A hozzáadott csomagokat a parancssoros beállító felületen kell engedélyezni.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/plnx.png}
+    \caption{Petalinux konfigurációs felülete}
+\end{figure}
+
+A csomagok hozzáadásán kívül lehetőségünk van a generált device tree módosítására is. Ez főleg saját tervezésű PCB-k esetében fontos, azonban Xilinx által gyártott tesztkártyák esetében is szükséges lehet néhány paraméter módosítása. Ebben a feladatban a generált device tree megfelelt az elvárásoknak, így nem kellett módosítanom rajta.
+
+Végül pedig engedélyezni kellett az ext4 rootfs-t, és a tftpboot-ot. Előbbi azt jelenti, hogy az operációs rendszer boot partíciója lehet ext4 partíció, míg utóbbi azt teszi lehetővé, hogy a boot partíció ne az eszközön, hanem egy távoli tftp (Trivial File Transfer Protocol) szerveren legyen tárolva. Ezen kívül engedélyeznünk kell a NFS (Network File System) használatát is, amivel a rootfs partíció is távoli szerverről lehet elérhető. Ez utóbbi két dolog megkönnyíti a fejlesztés folyamatát, hiszen egy SD kártya írása helyett a kész image-et csak egy szerverre kell másolni, valamint még nagyobb előny, hogy fizikailag nem kell a kártya közelében tartózkodnunk.
+
+Ezután csak ki kell adnunk a \mycode{petalinux-build} parancsot, és elkezdődik a build folyamat. Ennek eredménye egy SD kártyára írható image. Ebben a feladatban az image-et egy szkript segítségével szét kellett bontani a két partícióra, ezeket a szerveren két külön helyre kell majd másolni a helyes működéshez.
+
+\section{Vitis platform}
+
