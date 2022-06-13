@@ -74,4 +74,66 @@ Végül pedig engedélyezni kellett az ext4 rootfs-t, és a tftpboot-ot. Előbbi
 Ezután csak ki kell adnunk a \mycode{petalinux-build} parancsot, és elkezdődik a build folyamat. Ennek eredménye egy SD kártyára írható image. Ebben a feladatban az image-et egy szkript segítségével szét kellett bontani a két partícióra, ezeket a szerveren két külön helyre kell majd másolni a helyes működéshez.
 
 \section{Vitis platform}
+Az SoC alkalmazás teljes elkészítéséhez az utolsó lépés a Vitis platform generálása. A generáláshoz megint fel kell használni az előzőekben tárgyalt .xsa fájlt, ami a Vivado base platform készítésének eredménye volt. Ezen kívül szükség lesz az elkészült Petalinux rootfs és boot partíció fájlokra is. Ebben a fázisban három különálló dolog történik.
 
+\subsection{IP core-ok fordítása}
+Ebben a lépésben jelenik meg először a már említett V++ linker és fordító. Ahhoz hogy az IP-core-okat a rendszerhez tudjuk illeszteni, először elő kell állítani a hozzájuk tartozó Xilinx object állományokat, melyek .xo kiterjesztéssel rendelkeznek. Érdekesség, hogy míg a DPU ip-t hardverleíróból állítja elő, addig a V++ fordító alkalmas arra is, hogy C++ kódból állítson elő .xo fájlokat, ha azok megfelelő formátumban állnak rendelkezésre. Ezt az utóbbi módszert kell használnom a feladat következő részében, amikor a Multiscaler IP-t is hozzá kell adni a projekthez.
+
+\subsection{Hardware és software egybeillesztése}
+Ebben a lépésben a V++ linker összekapcsolja az eddig elkészült objektumokat. A Vivado base platformon keresztül összeköti az IP core-ok fordításából származó .xo fájlokat a már kész szoftver platformmal. Ez a lépés a kész Petalinux komponensen már nem változtat, azonban a PL konfigurációs bitstream fájlja ebben a lépésben lesz teljes, hiszen itt válnak az IP core-ok a részévé. Ezzel előáll egy használatra kész szoftver és hardverkonfiguráció is, amit rá is lehet tölteni a kártyára.
+
+\subsection{Alkalmazások fordítása}
+Azonban fordítókörnyezet nem mindig áll rendelkezésre az eszközön, sőt, ahogy már szerepelt ebben a dokumentumban, lehetőség van bare metal működésre is operációs rendszer nélkül. Mindkét esetben a Vitis fordítás utolsó lépése a felhasználói alkalmazások fordítása. Ehhez egy szokásos C++ fordító áll rendelkezésre, olyan kiegészítésekkel, amik lehetővé teszik a szintetizált hardveres gyorsítók szoftveres elérését.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/vitis.png}
+    \caption{SoC alkalmazás felépítése}
+\end{figure}
+
+\section{C++ alkalmazás}
+A feladat eddig elvégzett részében az alkalmazás egy memóriában tárolt kép osztályozására alkalmas.
+
+\subsection{A program felépítése}
+
+Az első lépés az adott kép átméretezése, mivel a modellek csak egy adott méretű bemenettel tudnak dolgozni. Az alkalmazásban az átméretezést az opencv modul végzi, amit a Petalinux konfigurálásánál lehetett csomagként hozzáadni a rendszerhez.
+
+Ezután elő kell készíteni az adatokat, vagyis meg kell mutatni a kernelnek, hogy hol találja meg a bemeneti képet, és hogy az eredményt hova tegye. Ezen kívül a kiértékeléshez használt modellt is itt tudjuk megmutatni. A következő kódrészlet mutatja be, hogy hogyan készíthetjük elő a kernel működését.
+
+\begin{lstlisting}[frame=single,float=!ht]
+    auto runner =
+    vart::dpu::DpuRunnerFactory::create_dpu_runner(filename, kernel_name);
+    auto input_tensors = runner->get_input_tensors();
+    auto output_tensors = runner->get_output_tensors();
+\end{lstlisting}
+
+Ezek után indíthatjuk a kiértékelést. Ekkor a hardveres gyorsító, a DPU, elvégzi az inference műveletet, és visszaadja az eredményt. Ezt az eredményt szoftveresen meg kell várnunk, ahogy ez az alábbi kódrészletben is látszik.
+
+\begin{lstlisting}[frame=single,float=!ht]
+    auto v = runner->execute_async({input_tensor_buffer.get()},
+                                {output_tensor_buffer.get()});
+    auto status = runner->wait((int)v.first, -1);
+\end{lstlisting}
+
+Ekkor már rendelkezésre áll az inference eredménye, és a program utolsó feladata, hogy ezt az eredményt emberi formában közölje.
+
+\subsection{A program használata}
+A program működését egy paprikát ábrázoló képpel igazoltam.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=50mm, keepaspectratio]{figures/bellpepper.png}
+    \caption{Kaliforniai paprika (bell pepper) - A program bemenete}
+\end{figure}
+
+A program indítása az \mycode{env LD\_LIBRARY\_PATH=samples/lib XLNX\_VART\_FIRMWARE=/home/root/dpu.xclbin ./dpu\_trd bellpepper.png} parancs kiadásával lehetséges, ahol a bemeneti kép és a Vitis AI Runtime elérési útvonalát kell megadni paraméterként.
+
+Az eredményt a standard kimeneten kapjuk szöveges formában. A vártaknak megfelel hiszen a kép valóban paprikát ábrázolt.
+
+\begin{lstlisting}[frame=single,float=!ht]
+    score[945]  =  0.992235     text: bell pepper,
+    score[941]  =  0.00315807   text: acorn squash,
+    score[943]  =  0.00191546   text: cucumber, cuke,
+    score[939]  =  0.000904801  text: zucchini, courgette,
+    score[949]  =  0.00054879   text: strawberry,
+\end{lstlisting}
