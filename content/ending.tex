@@ -1,0 +1,12 @@
+\chapter{A feladat folytatása}
+
+\section{Kamera és videófeldolgozás}
+A hardveres gyorsítás előnyének bemutatása nem túl látványos ha állóképen kell inference-t végezni. A feladat folytatásában egy kamera élőképének képkockáin fogok kiértékelést végezni. Ehhez vagy egy USB kamerát és a gstreamer szoftveres könyvtárat veszem majd igénybe. A PS van elég gyors ahhoz, hogy a videó jelet a megfelelő helyre tudja másolni valós időben, így nem lassítja majd a hardveres kiértékeléssel gyorsított folyamatot.
+
+\section{Multiscaler IP}
+Az eddig megvalósított alkalmazásban a képek átméretezését szoftveresen végeztem, ez azonban nagyon lassítja a program működését, így az jelenlegi állapotában nem lenne alkalmas valós idejű kiértékelésre. A Xilinx által kibocsátott Multiscaler IP blokk felhasználásával a képek átméretezését is hardveresen tudom majd gyorsítani.
+
+Általánosságban elmondható, hogy a feladat célja, hogy a szoftver méretét és feladatainak körét csökkentsem, és a lehető legtöbb munkát adjam át a hardveres résznek.
+
+\section{Arcdetektálás}
+A videófolyamon már nem osztályozás lesz a feladat, hanem arcfelismerés. Ennek a műveletnek nem szöveges kimenete lesz, hanem egy módosított videófolyam. A cél az, hogy ezen a videón az arcok köré bounding box-ot, azaz keretet rajzoljak.
